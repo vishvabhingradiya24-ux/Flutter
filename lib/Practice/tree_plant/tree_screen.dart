@@ -3,24 +3,39 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:priyanshi/Practice/tree_plant/tree_controller.dart';
 
-class TreeScreen extends StatelessWidget {
+class TreeScreen extends StatefulWidget {
   TreeScreen({super.key});
 
-  TreeController controller = Get.put(TreeController());
+  @override
+  State<TreeScreen> createState() => _TreeScreenState();
+}
 
+class _TreeScreenState extends State<TreeScreen> {
+ final TreeController controller = Get.put(TreeController());
+
+ @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    controller.TreeCont();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(
         () => controller.isLoading.value
             ? Center(child: CircularProgressIndicator())
+            :controller.TreeData.isEmpty
+            ?Center(child: Text("no data found"),)
             : ListView.builder(
                 itemCount: controller.TreeData.length,
                 itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-
-                    ],
+                  final data=controller.TreeData[index];
+                  return ListTile(
+                    title: Text(data.name.toString()),
+                    subtitle: Text(data.description.toString()),
+                    leading: Image.network(data.image.toString()),
                   );
                 },
               ),
